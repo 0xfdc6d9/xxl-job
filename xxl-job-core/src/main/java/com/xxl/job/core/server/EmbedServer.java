@@ -27,6 +27,16 @@ import java.util.concurrent.*;
  *
  * @author xuxueli 2020-04-11 21:25
  */
+
+/*
+Q：EmbedServer 的作用是什么
+A：EmbedServer 是 XXL-JOB 的内嵌服务器，用于提供执行器服务和调度器服务。
+在 XXL-JOB 中，执行器是一个独立的进程，它负责执行任务，并将执行结果返回给调度器。
+EmbedServer 提供了执行器服务，可以让执行器进程与调度器进程进行通信，协同完成任务的执行和结果的返回。
+同时，EmbedServer 也提供了调度器服务，用于接收调度器的任务调度请求，并将任务分配给执行器进行处理。
+因此，EmbedServer 是 XXL-JOB 的重要组件，它是整个系统的核心。
+ */
+
 public class EmbedServer {
     private static final Logger logger = LoggerFactory.getLogger(EmbedServer.class);
 
@@ -61,6 +71,7 @@ public class EmbedServer {
                         });
                 try {
                     // start server
+                    // 初始化 netty 服务器
                     ServerBootstrap bootstrap = new ServerBootstrap();
                     bootstrap.group(bossGroup, workerGroup)
                             .channel(NioServerSocketChannel.class)
@@ -76,7 +87,7 @@ public class EmbedServer {
                             })
                             .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-                    // bind
+                    // bind（绑定端口）
                     ChannelFuture future = bootstrap.bind(port).sync();
 
                     logger.info(">>>>>>>>>>> xxl-job remoting server start success, nettype = {}, port = {}", EmbedServer.class, port);

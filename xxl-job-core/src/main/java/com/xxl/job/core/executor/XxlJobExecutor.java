@@ -81,6 +81,7 @@ public class XxlJobExecutor  {
         TriggerCallbackThread.getInstance().start();
 
         // init executor-server
+        // 启动一个 XxlJobExecutor，会启动一个 EmbedServer
         initEmbedServer(address, ip, port, appname, accessToken);
     }
 

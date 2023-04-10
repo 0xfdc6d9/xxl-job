@@ -28,7 +28,7 @@ public class EmailJobAlarm implements JobAlarm {
     private static Logger logger = LoggerFactory.getLogger(EmailJobAlarm.class);
 
     /**
-     * fail alarm
+     * fail alarm（发送报警邮件）
      *
      * @param jobLog
      */

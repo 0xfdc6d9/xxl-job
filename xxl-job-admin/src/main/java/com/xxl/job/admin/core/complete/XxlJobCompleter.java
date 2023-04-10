@@ -16,6 +16,22 @@ import java.text.MessageFormat;
 /**
  * @author xuxueli 2020-10-30 20:43:10
  */
+
+/*
+Q：XxlJobCompleter 有什么作用？
+
+A：XxlJobCompleter 是 xxl-job 的一个核心组件，用于执行任务完成后的回调操作。
+在 xxl-job 中，任务执行完成后，需要向调度中心报告任务的执行结果。XxlJobCompleter 就是负责完成这个操作的组件。
+
+具体来说，XxlJobCompleter 主要有以下作用：
+1.获取任务执行结果：XxlJobCompleter 会从 JobThread 中获取任务的执行结果，包括任务的执行状态、执行结果和日志信息等。
+2.上报任务执行结果：XxlJobCompleter 会将任务的执行结果上报给调度中心，以便调度中心能够及时更新任务的状态和执行情况。
+3.更新任务状态：XxlJobCompleter 会根据任务的执行结果更新任务的状态，包括任务的完成状态、执行次数和下次执行时间等。
+4.执行回调方法：XxlJobCompleter 还支持执行任务完成后的回调方法。在任务执行完成后，如果设置了回调方法，XxlJobCompleter 就会执行该回调方法，以便进行后续的操作。
+
+在 xxl-job 中，XxlJobCompleter 是通过调度中心和执行器之间的通信实现任务状态的更新和回调方法的执行。
+在调度中心和执行器之间，XxlJobCompleter 是一个重要的桥梁，确保任务的执行结果能够及时上报，并能够正确地更新任务的状态和执行情况。
+ */
 public class XxlJobCompleter {
     private static Logger logger = LoggerFactory.getLogger(XxlJobCompleter.class);
 

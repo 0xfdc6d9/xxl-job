@@ -35,11 +35,18 @@ public class ExecutorRegistryThread {
             return;
         }
 
+        /**
+         * 启动一个线程执行注册逻辑
+         */
         registryThread = new Thread(new Runnable() {
             @Override
             public void run() {
 
                 // registry
+                /*
+                线程的 run 方法中，会一直执行注册逻辑，直到 toStop 为 true。
+                注册逻辑包括向所有的 AdminBiz 发送注册请求，如果注册成功，则记录日志，并跳出循环。如果注册失败，则记录日志。
+                 */
                 while (!toStop) {
                     try {
                         RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
@@ -67,6 +74,9 @@ public class ExecutorRegistryThread {
 
                     try {
                         if (!toStop) {
+                            /*
+                            在每次注册请求发送之后，线程会睡眠 BEAT_TIMEOUT 秒，然后再进行下一次注册请求。
+                             */
                             TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
                         }
                     } catch (InterruptedException e) {
@@ -106,6 +116,10 @@ public class ExecutorRegistryThread {
 
             }
         });
+        /*
+        将 registryThread 设置为守护线程是为了避免该线程在主程序退出时仍然运行而导致程序无法正常退出。
+        守护线程是一种特殊的线程，当所有非守护线程都结束时，守护线程会自动退出。
+         */
         registryThread.setDaemon(true);
         registryThread.setName("xxl-job, executor ExecutorRegistryThread");
         registryThread.start();
@@ -116,8 +130,13 @@ public class ExecutorRegistryThread {
 
         // interrupt and wait
         if (registryThread != null) {
+            /*
+            Java里一个线程调用了Thread.interrupt()到底意味着什么？ https://www.zhihu.com/question/41048032/answer/89431513
+            通知 registryThread 线程："你应该进行中断了"
+             */
             registryThread.interrupt();
             try {
+                // 等待 registryThread 线程死亡
                 registryThread.join();
             } catch (InterruptedException e) {
                 logger.error(e.getMessage(), e);
